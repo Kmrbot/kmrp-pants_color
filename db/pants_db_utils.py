@@ -1,3 +1,5 @@
+import os
+from pathlib import Path
 from typing import List
 from nonebot import get_driver
 from tortoise import Tortoise
@@ -10,13 +12,14 @@ class PantsDBUtils:
 
     @classmethod
     async def init(cls):
+        plugin_name = os.path.split(Path(os.path.dirname(os.path.dirname(__file__))))[1]
         config = {
             "connections": {
                 "plugin_miriya_pants_color_conn": f"sqlite://{get_plugin_db_path('miriya_pants_color.sqlite3')}"
             },
             "apps": {
                 "kmr_bot_app": {
-                    "models": ["plugins.miriya_pants_color.db.pants_db"],
+                    "models": [f"plugins.{plugin_name}.db.pants_db"],
                     "default_connection": "plugin_miriya_pants_color_conn",
                 }
             }

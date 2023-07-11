@@ -207,8 +207,8 @@ class PantsRecordPainter:
 
         # git提交信息
         repo = git.Repo(os.path.dirname(os.getcwd()))
-        git_commit_info = json.loads(repo.git.log('--pretty=format:{"commit_id":"%h", "date":"%cd", "summary":"%s"}',
-                                                  max_count=1))
+        #git_commit_info = json.loads(repo.git.log('--pretty=format:{"commit_id":"%h", "date":"%cd", "summary":"%s"}',
+        #                                          max_count=1))
         origin_row_space = pic.row_space
         pic.set_row_space(10)
         pic.draw_text_right(20,
@@ -218,8 +218,8 @@ class PantsRecordPainter:
         pic.draw_text_right(20, f"Author : {KmrBotBaseInfo.get_author_name()}", pic.base_text_font,
                             Color.HELP_DESIGNER_AUTHOR_NAME)
         pic.draw_text_right(20, f"{KmrBotBaseInfo.get_author_url()}", pic.base_text_font, Color.LINK)
-        pic.draw_text_right(20, f"Git Update SHA-1 : {git_commit_info['commit_id']}", pic.base_text_font, Color.GREEN)
-        pic.draw_text_right(20, f"Git Update Date : {git_commit_info['date']}", pic.base_text_font, Color.GREEN)
+        #pic.draw_text_right(20, f"Git Update SHA-1 : {git_commit_info['commit_id']}", pic.base_text_font, Color.GREEN)
+        #pic.draw_text_right(20, f"Git Update Date : {git_commit_info['date']}", pic.base_text_font, Color.GREEN)
         pic.set_row_space(origin_row_space)
 
         return pic
