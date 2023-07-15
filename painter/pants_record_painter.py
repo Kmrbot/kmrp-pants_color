@@ -229,7 +229,6 @@ class PantsRecordPainter:
         # 如果缓存有 就用缓存的
         cache_img = PantsRecordPainter.__pants_pic_cache.get((color_type, pants_color))
         if cache_img is not None:
-            print(f"UseCache {color_type} {pants_color}")
             return cache_img
         img = Image.open(f"{os.path.dirname(__file__)}/pants.png")
         img = img.convert("RGBA")
