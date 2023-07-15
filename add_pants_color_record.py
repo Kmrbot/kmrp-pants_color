@@ -19,7 +19,6 @@ add_pants_color_record.__doc__ = """添加咪莉娅胖次颜色记录"""
 add_pants_color_record.__help_type__ = None
 
 add_pants_color_record.handle()(while_list_handle("miriya_pants_color"))
-add_pants_color_record.handle()(permission_only_me)
 
 
 async def handle_pants_timestamp_color(
@@ -54,5 +53,13 @@ add_pants_color_record.handle()(handle_pants_timestamp_color)
 @add_pants_color_record.handle()
 async def _(date: str = ArgPlainText("date"), color: str = ArgPlainText("color")):
     """添加咪莉娅胖次颜色记录"""
+    old_color = await PantsDBUtils.get_pants_color(date=date)
+    if old_color is not None:
+        if old_color.color != color:
+            color_replace_str = f"原记录颜色原记录被覆盖！原记录颜色：{old_color.color}\n\n"
+        else:
+            color_replace_str = f"与原记录相同！\n\n"
+    else:
+        color_replace_str = ""
     await PantsDBUtils.set_pants_color(date=date, color=color)
-    await add_pants_color_record.finish(f"已成功添加咪莉娅胖次颜色记录： {date} 的胖次颜色为 {color}")
+    await add_pants_color_record.finish(color_replace_str + f"已成功添加咪莉娅胖次颜色记录： {date} 的胖次颜色为 {color}")

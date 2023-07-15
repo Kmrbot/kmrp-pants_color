@@ -36,12 +36,12 @@ class PantsDBUtils:
     @classmethod
     async def get_pants_color(cls, **kwargs):
         """ 获取胖次颜色 """
-        return await MiRiYaPantsColor.get(**kwargs)
+        return await MiRiYaPantsColor.get(**kwargs).first()
 
     @classmethod
     async def set_pants_color(cls, **kwargs):
         """ 设置胖次颜色 """
-        if not await cls.get_pants_color(**kwargs):
+        if not await cls.get_pants_color(date=kwargs["date"]):
             await MiRiYaPantsColor.add(
                 date=kwargs["date"],
                 color=kwargs["color"])

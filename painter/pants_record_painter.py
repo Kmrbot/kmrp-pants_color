@@ -2,7 +2,7 @@ import copy
 import enum
 import json
 import os
-from typing import List
+from typing import List, Dict, Tuple
 import calendar
 import datetime
 import git
@@ -226,6 +226,11 @@ class PantsRecordPainter:
 
     @classmethod
     def __get_pants_pic(cls, pic, color_type, pants_color) -> Image:
+        # 如果缓存有 就用缓存的
+        cache_img = PantsRecordPainter.__pants_pic_cache.get((color_type, pants_color))
+        if cache_img is not None:
+            print(f"UseCache {color_type} {pants_color}")
+            return cache_img
         img = Image.open(f"{os.path.dirname(__file__)}/pants.png")
         img = img.convert("RGBA")
         img = img.resize((50, 25))
@@ -245,4 +250,7 @@ class PantsRecordPainter:
             elif color_type == PantsColorType.COLOR_TYPE_INVALID_COLOR:
                 draw.text(paint_pos, "？", Color.GREEN.value, font=pic.base_text_font)
         img.putdata(new_image)
+        PantsRecordPainter.__pants_pic_cache[(color_type, pants_color)] = img
         return img
+
+    __pants_pic_cache: Dict[Tuple[int, int], Image.Image] = {}   # Dict[Tuple[图片类型PantsColorType, 颜色color], 图片]
