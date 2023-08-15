@@ -1,4 +1,4 @@
-from tortoise.fields.data import CharField, IntField
+from tortoise.fields.data import CharField
 from plugins.db_base_model import PluginsDBBaseModel
 
 

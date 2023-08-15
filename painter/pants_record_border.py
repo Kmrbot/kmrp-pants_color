@@ -6,6 +6,5 @@ class PantsColorBorder:
     BORDER_PANTS_MONTH_LR = 80                  # 月记录数据的左右间隔
     BORDER_PANTS_DAY_D = 5                      # 每日记录的下方留白距离
     BORDER_PANTS_DAY_LR = 100                   # 日记录数据的左右间隔
-    BORDER_PANTS_DAY_EACH_PIC_R = 5             # 日记录数据每个右侧留白距离
     BORDER_STATISTICS_U = 20                    # 统计数据距离上面留白距离
     BORDER_DESIGNER_INFO_BOTTOM_HEIGHT = 210    # 开发者信息距离底部的高度

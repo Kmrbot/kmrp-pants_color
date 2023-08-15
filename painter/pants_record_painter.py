@@ -1,15 +1,15 @@
 import copy
 import enum
-import json
 import os
 from typing import List, Dict, Tuple
 import calendar
 import datetime
 import git
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 from kmrbot_plugins.painter.pic_painter.color import Color
 from kmrbot_plugins.painter.pic_painter.pic_generator import PicGenerator
+from kmrbot_plugins.painter.pic_painter.utils import PainterUtils
 from kmrbot_plugins.bot_base_info import KmrBotBaseInfo
 from nonebot.log import logger
 from .pants_record_border import PantsColorBorder
@@ -22,6 +22,15 @@ class PantsColorType(enum.Enum):
     COLOR_TYPE_OK = 0,
     COLOR_TYPE_NO_RECORD = 1,
     COLOR_TYPE_INVALID_COLOR = 2
+
+
+class PantsRecordFont:
+    __text_font = ImageFont.truetype(
+        f"{PainterUtils.get_painter_resource_path()}/normal.ttf", 30)
+    
+    @classmethod
+    def text_font(cls):
+        return cls.__text_font
 
 
 class PantsRecordPainter:
@@ -43,6 +52,7 @@ class PantsRecordPainter:
         # 绘制开发者信息
         pic = cls.__paint_designed_info(pic)
 
+        pic.save("pants.png")
         return pic.bytes_io()
 
     @classmethod
@@ -65,7 +75,7 @@ class PantsRecordPainter:
     def __paint_title(cls, pic: PicGenerator):
         """ 绘制标题 """
         pic.move_pos(0, 0)
-        pic.paint_center_text(pic.x, "咪莉娅胖次颜色记录", pic.base_text_font, Color.BLACK,
+        pic.paint_center_text(pic.x, "咪莉娅胖次颜色记录", PantsRecordFont.text_font(), Color.BLACK,
                               right_limit=pic.width,
                               row_length=0)
         return pic
@@ -116,7 +126,7 @@ class PantsRecordPainter:
     @classmethod
     def __paint_pants_color_each_year(cls, pic: PicGenerator, year, cur_year_data):
         """ 绘制每个年的胖次颜色历史记录 """
-        pic.paint_auto_line_text(pic.x, f"{year}年\n", pic.base_text_font, Color.BLACK)
+        pic.paint_auto_line_text(pic.x, f"{year}年\n", PantsRecordFont.text_font(), Color.BLACK)
         for month in range(len(cur_year_data)):
             # 如果全空就不渲染了
             is_not_empty = False
@@ -126,14 +136,14 @@ class PantsRecordPainter:
                     break
             if is_not_empty:
                 pic.move_pos(0, PantsColorBorder.BORDER_PANTS_MONTH_D)
-                pic = cls.__paint_pants_color_each_month(pic, month + 1, cur_year_data[month])
+                pic = cls.__paint_pants_color_each_month(pic, year, month + 1, cur_year_data[month])
         return pic
 
     @classmethod
-    def __paint_pants_color_each_month(cls, pic: PicGenerator, month, cur_month_data):
+    def __paint_pants_color_each_month(cls, pic: PicGenerator, year, month, cur_month_data):
         """ 绘制每个月的胖次颜色历史记录 """
         pic.set_pos(PantsColorBorder.BORDER_PANTS_MONTH_LR, pic.y + PantsColorBorder.BORDER_PANTS_DAY_D)
-        pic.paint_auto_line_text(pic.x, f"{month}月\n", pic.base_text_font, Color.BLACK)
+        pic.paint_auto_line_text(pic.x, f"{month}月\n", PantsRecordFont.text_font(), Color.BLACK)
 
         for each_day in range(len(cur_month_data)):
             # 渲染日期数字
@@ -141,10 +151,10 @@ class PantsRecordPainter:
                 day_str = f"{each_day + 1}"
             else:
                 day_str = ""
-            pic.paint_auto_line_text(pic.x, day_str, pic.base_text_font, Color.BLACK)
-            pic.set_pos(pic.x - pic.get_paint_string_length(day_str, pic.base_text_font)
-                        + 50 + PantsColorBorder.BORDER_PANTS_DAY_EACH_PIC_R, pic.y)
-        pic.paint_auto_line_text(pic.x, "\n", pic.base_text_font, Color.BLACK)
+            pos_x = pic.x
+            pic.paint_auto_line_text(pic.x, day_str, PantsRecordFont.text_font(), Color.BLACK)
+            pic.set_pos(pos_x + 56, pic.y)
+        pic.paint_auto_line_text(pic.x, "\n", PantsRecordFont.text_font(), Color.BLACK)
         pic.set_pos(PantsColorBorder.BORDER_PANTS_MONTH_LR, pic.y)
         for each_day in range(len(cur_month_data)):
             color = None
@@ -161,13 +171,15 @@ class PantsRecordPainter:
                     color_value = color_data["colors"][0]  # 暂时先只画第1个颜色
                     color = ((color_value >> 16) & 0xff, (color_value >> 8) & 0xff, color_value & 0xff)
                     color_type = PantsColorType.COLOR_TYPE_OK
-            pants_img = cls.__get_pants_pic(pic, color_type, color)
-            pic.move_pos(0, 10)  # 图片向下移动一点会好看一些
+            pants_img = cls.__get_pants_pic(
+                color_type,
+                color,
+                is_weekday=datetime.datetime.strptime(f"{year}.{month}.{each_day + 1}", "%Y.%m.%d").weekday() < 5)
+            pic.move_pos(-15, 10)  # 图片向下移动一点会好看一些
             pic.paint_auto_line_pic(
                 pic.x, pants_img, right_limit=pic.width - PantsColorBorder.BORDER_PANTS_DAY_LR)
-            pic.move_pos(0, -10)
-            pic.move_pos(PantsColorBorder.BORDER_PANTS_DAY_EACH_PIC_R, 0)
-        pic.paint_auto_line_text(pic.x, "\n", pic.base_text_font)
+            pic.move_pos(15, -10)
+        pic.paint_auto_line_text(pic.x, "\n", PantsRecordFont.text_font())
         pic.set_pos(-PantsColorBorder.BORDER_PANTS_MONTH_LR, pic.y)
         return pic
 
@@ -175,7 +187,7 @@ class PantsRecordPainter:
     def __paint_statistics_data(cls, pic: PicGenerator, pants_data: List[MiRiYaPantsColor]):
         """ 绘制统计数据 """
         pic.set_pos(PantsColorBorder.BORDER_PANTS_HISTORY_LR, pic.y + PantsColorBorder.BORDER_STATISTICS_U)
-        pic.paint_auto_line_text(pic.x, "颜色统计：\n", pic.base_text_font, Color.BLACK)
+        pic.paint_auto_line_text(pic.x, "颜色统计：\n", PantsRecordFont.text_font(), Color.BLACK)
         if len(pants_data) == 0:
             return pic
         # 统计每种颜色的次数
@@ -196,7 +208,7 @@ class PantsRecordPainter:
                 # if pants_color_data.get(color_str) is not None:
                 #     color_value = pants_color_data[color_str]["colors"][0]  # 暂时先只画第1个颜色
                 # color_value转颜色数据
-                pic.paint_auto_line_text(pic.x, f"{color_str}：{count}次\n", pic.base_text_font, Color.BLACK)
+                pic.paint_auto_line_text(pic.x, f"{color_str}：{count}次\n", PantsRecordFont.text_font(), Color.BLACK)
 
         return pic
 
@@ -213,43 +225,58 @@ class PantsRecordPainter:
         pic.set_row_space(10)
         pic.draw_text_right(20,
                             ["K", "m", "r", "Bot", KmrBotBaseInfo.get_version()],
-                            pic.base_text_font,
+                            PantsRecordFont.text_font(),
                             [Color.DEEPSKYBLUE, Color.FUCHSIA, Color.CRIMSON, Color.BLACK, Color.RED, Color.GRAY])
-        pic.draw_text_right(20, f"Author : {KmrBotBaseInfo.get_author_name()}", pic.base_text_font,
+        pic.draw_text_right(20, f"Author : {KmrBotBaseInfo.get_author_name()}", PantsRecordFont.text_font(),
                             Color.HELP_DESIGNER_AUTHOR_NAME)
-        pic.draw_text_right(20, f"{KmrBotBaseInfo.get_author_url()}", pic.base_text_font, Color.LINK)
-        #pic.draw_text_right(20, f"Git Update SHA-1 : {git_commit_info['commit_id']}", pic.base_text_font, Color.GREEN)
-        #pic.draw_text_right(20, f"Git Update Date : {git_commit_info['date']}", pic.base_text_font, Color.GREEN)
+        pic.draw_text_right(20, f"{KmrBotBaseInfo.get_author_url()}", PantsRecordFont.text_font(), Color.LINK)
+        #pic.draw_text_right(20, f"Git Update SHA-1 : {git_commit_info['commit_id']}", PantsRecordFont.text_font(), Color.GREEN)
+        #pic.draw_text_right(20, f"Git Update Date : {git_commit_info['date']}", PantsRecordFont.text_font(), Color.GREEN)
         pic.set_row_space(origin_row_space)
 
         return pic
 
     @classmethod
-    def __get_pants_pic(cls, pic, color_type, pants_color) -> Image:
+    def __get_pants_pic(cls, color_type, pants_color, is_weekday=False) -> Image:
+        img_base_size = (56, 35)
         # 如果缓存有 就用缓存的
-        cache_img = PantsRecordPainter.__pants_pic_cache.get((color_type, pants_color))
-        if cache_img is not None:
-            return cache_img
-        img = Image.open(f"{os.path.dirname(__file__)}/pants.png")
-        img = img.convert("RGBA")
-        img = img.resize((50, 25))
-        d = img.getdata()
-        new_image = []
-        if pants_color is not None:
-            for item in d:
-                if item[0] > 200 and item[3] > 30:
-                    new_image.append(pants_color)
-                else:
-                    new_image.append(item)
+        dst_img = PantsRecordPainter.__pants_pic_cache.get((color_type, pants_color))
+        if dst_img is None:
+            img_base = Image.new("RGBA", img_base_size, (255, 255, 255, 0))
+            if pants_color is not None:
+                pants_size = (50, 25)
+                pants_img = Image.open(f"{os.path.dirname(__file__)}/pants.png")
+                pants_img = pants_img.convert("RGBA")
+                pants_img = pants_img.resize(pants_size)
+                d = pants_img.getdata()
+                img_tmp = []
+                for item in d:
+                    if item[0] > 200 and item[3] > 30:
+                        img_tmp.append(pants_color)
+                    else:
+                        img_tmp.append(item)
+                pants_img.putdata(img_tmp)
+                img_base.paste(pants_img, (3, 5))
+            else:
+                draw = ImageDraw.Draw(img_base)
+                paint_pos = (20, -5)
+                if color_type == PantsColorType.COLOR_TYPE_NO_RECORD:
+                    draw.text(paint_pos, "？", Color.RED.value, font=PantsRecordFont.text_font())
+                elif color_type == PantsColorType.COLOR_TYPE_INVALID_COLOR:
+                    draw.text(paint_pos, "？", Color.GREEN.value, font=PantsRecordFont.text_font())
+            PantsRecordPainter.__pants_pic_cache[(color_type, pants_color)] = img_base
+            dst_img = img_base
+
+        dst_img = copy.deepcopy(dst_img)
+        # 画一个外框
+        if is_weekday:
+            side_border_img = Image.new("RGBA", img_base_size, (0, 0, 0, 255))
+            # 掏空中间
         else:
-            draw = ImageDraw.Draw(img)
-            paint_pos = (18, -8)
-            if color_type == PantsColorType.COLOR_TYPE_NO_RECORD:
-                draw.text(paint_pos, "？", Color.RED.value, font=pic.base_text_font)
-            elif color_type == PantsColorType.COLOR_TYPE_INVALID_COLOR:
-                draw.text(paint_pos, "？", Color.GREEN.value, font=pic.base_text_font)
-        img.putdata(new_image)
-        PantsRecordPainter.__pants_pic_cache[(color_type, pants_color)] = img
-        return img
+            side_border_img = Image.new("RGBA", img_base_size, (255, 0, 0, 255))
+        side_border_img_draw = ImageDraw.Draw(side_border_img)
+        side_border_img_draw.rectangle((2, 2, img_base_size[0] - 3, img_base_size[1] - 3), (255, 255, 255, 0), 2)
+        dst_img.alpha_composite(side_border_img)
+        return dst_img
 
     __pants_pic_cache: Dict[Tuple[int, int], Image.Image] = {}   # Dict[Tuple[图片类型PantsColorType, 颜色color], 图片]
