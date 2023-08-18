@@ -67,7 +67,7 @@ pants_color_data = {
         "colors": [0xFFFFFF, 0xFF00FF],
         "type": [PantsType.PANTS_TYPE_SOLID, PantsType.PANTS_TYPE_SOLID],
     },
-    "白色和紫色花紋": {
+    "白色和紫色花纹": {
         "colors": [0xFFFFFF, 0xFF00FF],
         "type": [PantsType.PANTS_TYPE_SOLID, PantsType.PANTS_TYPE_FLOWER],
     }
