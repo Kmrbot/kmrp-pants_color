@@ -7,8 +7,7 @@ from nonebot.adapters.onebot.v11 import (
     Message,
 )
 from nonebot.params import ArgPlainText, CommandArg
-from plugins import while_list_handle
-from plugins.common_plugins_function import get_time_zone, permission_only_me
+from plugins.common_plugins_function import get_time_zone, while_list_handle
 from .db.pants_db_utils import PantsDBUtils
 from .pants_color import pants_color_data
 

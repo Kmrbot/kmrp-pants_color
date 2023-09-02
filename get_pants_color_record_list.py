@@ -1,7 +1,6 @@
 from nonebot import on_command
 from nonebot.rule import to_me
-from plugins import while_list_handle
-from plugins.common_plugins_function import permission_only_me
+from plugins.common_plugins_function import permission_only_me, while_list_handle
 from nonebot.adapters.onebot.v11.message import MessageSegment
 from .db.pants_db_utils import PantsDBUtils
 from .painter.pants_record_painter import PantsRecordPainter
