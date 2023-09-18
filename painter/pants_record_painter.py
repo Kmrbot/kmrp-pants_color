@@ -267,16 +267,16 @@ class PantsRecordPainter:
             PantsRecordPainter.__pants_pic_cache[(color_type, pants_color)] = img_base
             dst_img = img_base
 
-        dst_img = copy.deepcopy(dst_img)
+        # dst_img = copy.deepcopy(dst_img)
         # 画一个外框
-        if is_weekday:
-            side_border_img = Image.new("RGBA", img_base_size, (0, 0, 0, 255))
-            # 掏空中间
-        else:
-            side_border_img = Image.new("RGBA", img_base_size, (255, 0, 0, 255))
-        side_border_img_draw = ImageDraw.Draw(side_border_img)
-        side_border_img_draw.rectangle((2, 2, img_base_size[0] - 3, img_base_size[1] - 3), (255, 255, 255, 0), 2)
-        dst_img.alpha_composite(side_border_img)
+        # if is_weekday:
+        #     side_border_img = Image.new("RGBA", img_base_size, (0, 0, 0, 255))
+        #     # 掏空中间
+        # else:
+        #     side_border_img = Image.new("RGBA", img_base_size, (255, 0, 0, 255))
+        # side_border_img_draw = ImageDraw.Draw(side_border_img)
+        # side_border_img_draw.rectangle((2, 2, img_base_size[0] - 3, img_base_size[1] - 3), (255, 255, 255, 0), 2)
+        # dst_img.alpha_composite(side_border_img)
         return dst_img
 
     __pants_pic_cache: Dict[Tuple[int, int], Image.Image] = {}   # Dict[Tuple[图片类型PantsColorType, 颜色color], 图片]
