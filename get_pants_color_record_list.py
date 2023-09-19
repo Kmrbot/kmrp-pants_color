@@ -1,6 +1,6 @@
 from nonebot import on_command
 from nonebot.rule import to_me
-from plugins.common_plugins_function import permission_only_me, while_list_handle
+from plugins.common_plugins_function import permission_only_me, white_list_handle
 from nonebot.adapters.onebot.v11.message import MessageSegment
 from .db.pants_db_utils import PantsDBUtils
 from .painter.pants_record_painter import PantsRecordPainter
@@ -11,7 +11,7 @@ get_pants_color_record_list = on_command("获取咪莉娅胖次颜色记录",
 get_pants_color_record_list.__doc__ = """获取咪莉娅胖次颜色记录"""
 get_pants_color_record_list.__help_type__ = None
 
-get_pants_color_record_list.handle()(while_list_handle("miriya_pants_color"))
+get_pants_color_record_list.handle()(white_list_handle("miriya_pants_color"))
 get_pants_color_record_list.handle()(permission_only_me)
 
 

@@ -7,7 +7,7 @@ from nonebot.adapters.onebot.v11 import (
     Message,
 )
 from nonebot.params import ArgPlainText, CommandArg
-from plugins.common_plugins_function import get_time_zone, while_list_handle
+from plugins.common_plugins_function import get_time_zone, white_list_handle
 from .db.pants_db_utils import PantsDBUtils
 from .pants_color import pants_color_data
 
@@ -17,7 +17,7 @@ add_pants_color_record = on_command("添加咪莉娅胖次颜色记录",
 add_pants_color_record.__doc__ = """添加咪莉娅胖次颜色记录"""
 add_pants_color_record.__help_type__ = None
 
-add_pants_color_record.handle()(while_list_handle("miriya_pants_color"))
+add_pants_color_record.handle()(white_list_handle("miriya_pants_color"))
 
 
 async def handle_pants_timestamp_color(
