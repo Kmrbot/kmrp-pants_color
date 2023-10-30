@@ -7,4 +7,4 @@ class PantsColorBorder:
     BORDER_PANTS_DAY_D = 5                      # 每日记录的下方留白距离
     BORDER_PANTS_DAY_LR = 100                   # 日记录数据的左右间隔
     BORDER_STATISTICS_U = 20                    # 统计数据距离上面留白距离
-    BORDER_DESIGNER_INFO_BOTTOM_HEIGHT = 210    # 开发者信息距离底部的高度
+    BORDER_DESIGNER_INFO_BOTTOM_HEIGHT = 130    # 开发者信息距离底部的高度

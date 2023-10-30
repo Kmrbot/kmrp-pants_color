@@ -7,15 +7,14 @@ import datetime
 import git
 from PIL import Image, ImageDraw, ImageFont
 
-from kmrbot_plugins.painter.pic_painter.color import Color
-from kmrbot_plugins.painter.pic_painter.pic_generator import PicGenerator
-from kmrbot_plugins.painter.pic_painter.utils import PainterUtils
-from kmrbot_plugins.bot_base_info import KmrBotBaseInfo
+from kmrbot.painter.pic_painter.color import Color
+from kmrbot.painter.pic_painter.pic_generator import PicGenerator
+from kmrbot.painter.pic_painter.utils import PainterUtils
+from kmrbot.core.bot_base_info import KmrBotBaseInfo
 from nonebot.log import logger
 from .pants_record_border import PantsColorBorder
-from plugins.common_plugins_function import get_time_zone
-from ..db.pants_db import MiRiYaPantsColor
-from ..pants_color import pants_color_data
+from utils import get_time_zone
+from ..colors.pants_color import pants_color_data
 
 
 class PantsColorType(enum.Enum):
@@ -35,14 +34,14 @@ class PantsRecordFont:
 
 class PantsRecordPainter:
     @classmethod
-    def generate_pants_record_pic(cls, pants_data: List[MiRiYaPantsColor]):
+    def generate_pants_record_pic(cls, bg_pic, pants_data):
         width = 1920
         height = 100000
         pic = PicGenerator(width, height)
         pic = pic.draw_rectangle(0, 0, width, height, Color.WHITE)
 
         # 绘制背景图
-        pic = cls.__paint_background(pic)
+        pic = cls.__paint_background(pic, bg_pic)
         # 绘制标题内容
         pic = cls.__paint_title(pic)
         # 绘制标题内容
@@ -56,10 +55,10 @@ class PantsRecordPainter:
         return pic.bytes_io()
 
     @classmethod
-    def __paint_background(cls, pic: PicGenerator):
+    def __paint_background(cls, pic: PicGenerator, bg_pic):
         """ 绘制背景图 """
         pic.move_pos(0, 0)
-        background_image = Image.open(f"{os.path.dirname(__file__)}/miriya.png")
+        background_image = Image.open(f"{os.path.dirname(__file__)}/{bg_pic}")
         background_image = background_image.resize(
             (pic.width, int(background_image.height * pic.width / background_image.width))
         ).convert("RGBA")
@@ -81,13 +80,13 @@ class PantsRecordPainter:
         return pic
 
     @classmethod
-    def __paint_pants_color_history(cls, pic: PicGenerator, pants_data: List[MiRiYaPantsColor]):
+    def __paint_pants_color_history(cls, pic: PicGenerator, pants_data: List):
         """ 绘制胖次颜色历史记录 """
         pic.move_pos(-pic.x + PantsColorBorder.BORDER_PANTS_HISTORY_LR, PantsColorBorder.BORDER_TITLE_TO_HISTORY_B)
         if len(pants_data) == 0:
             return pic
         paint_data = copy.deepcopy(pants_data)
-        paint_data.sort(key=lambda x: datetime.datetime.strptime(x.date, "%Y.%m.%d").timestamp())   # 排序
+        paint_data.sort(key=lambda x: datetime.datetime.strptime(x["time"], "%Y.%m.%d").timestamp())   # 排序
 
         sys_datatime = datetime.datetime.now(get_time_zone())
         sys_year = sys_datatime.year
@@ -97,7 +96,7 @@ class PantsRecordPainter:
         cur_painting_year = None
         cur_painting_year_data = None
         for single_paint_data in paint_data:
-            single_paint_data_datetime = datetime.datetime.strptime(single_paint_data.date, "%Y.%m.%d")
+            single_paint_data_datetime = datetime.datetime.strptime(single_paint_data["time"], "%Y.%m.%d")
             painting_year = single_paint_data_datetime.year
             painting_month = single_paint_data_datetime.month
             painting_day = single_paint_data_datetime.day
@@ -119,7 +118,7 @@ class PantsRecordPainter:
                         12
                         if sys_year > painting_year
                         else sys_month if sys_year == painting_year else 0))
-            cur_painting_year_data[painting_month - 1][painting_day - 1] = single_paint_data.color
+            cur_painting_year_data[painting_month - 1][painting_day - 1] = single_paint_data["color"]
         pic = cls.__paint_pants_color_each_year(pic, cur_painting_year, cur_painting_year_data)
         return pic
 
@@ -184,7 +183,7 @@ class PantsRecordPainter:
         return pic
 
     @classmethod
-    def __paint_statistics_data(cls, pic: PicGenerator, pants_data: List[MiRiYaPantsColor]):
+    def __paint_statistics_data(cls, pic: PicGenerator, pants_data):
         """ 绘制统计数据 """
         pic.set_pos(PantsColorBorder.BORDER_PANTS_HISTORY_LR, pic.y + PantsColorBorder.BORDER_STATISTICS_U)
         pic.paint_auto_line_text(pic.x, "颜色统计：\n", PantsRecordFont.text_font(), Color.BLACK)
@@ -193,9 +192,9 @@ class PantsRecordPainter:
         # 统计每种颜色的次数
         color_count = {}
         for each_pants_data in pants_data:
-            if color_count.get(each_pants_data.color) is None:
-                color_count[each_pants_data.color] = 0
-            color_count[each_pants_data.color] += 1
+            if color_count.get(each_pants_data["color"]) is None:
+                color_count[each_pants_data["color"]] = 0
+            color_count[each_pants_data["color"]] += 1
         if len(color_count) != 0:
             arr = []
             for color_str, count in color_count.items():
