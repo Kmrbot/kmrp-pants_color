@@ -21,6 +21,6 @@ names = {
     },
     "uru": {
         "name": "uru",
-        "bg_pic": "miriya.png",
+        "bg_pic": "uru.png",
     },
 }

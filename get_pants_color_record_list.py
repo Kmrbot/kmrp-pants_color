@@ -27,6 +27,7 @@ async def _(params: Tuple[Any, ...] = RegexGroup()):
         await get_pants_color_record_list.finish("无效目标名！")
     pants_color_list = DBPantsColorInfo.get_pants_color_list(names[name]["name"])
     message = ProtocolAdapter.MS.image(PantsRecordPainter.generate_pants_record_pic(
+        names[name]["name"],
         names[name]["bg_pic"],
         pants_color_list))
     await get_pants_color_record_list.finish(message)

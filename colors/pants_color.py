@@ -9,7 +9,7 @@ class PantsType(enum.Enum):
 pants_color_data = {
     "红色": {
         "colors": [0xFF0000],
-        "type": PantsType.PANTS_TYPE_SOLID,
+        "type": [PantsType.PANTS_TYPE_SOLID],
         "db_color": "红色",
     },
     "绿色": {

@@ -34,7 +34,7 @@ class PantsRecordFont:
 
 class PantsRecordPainter:
     @classmethod
-    def generate_pants_record_pic(cls, bg_pic, pants_data):
+    def generate_pants_record_pic(cls, name, bg_pic, pants_data):
         width = 1920
         height = 100000
         pic = PicGenerator(width, height)
@@ -43,7 +43,7 @@ class PantsRecordPainter:
         # 绘制背景图
         pic = cls.__paint_background(pic, bg_pic)
         # 绘制标题内容
-        pic = cls.__paint_title(pic)
+        pic = cls.__paint_title(name, pic)
         # 绘制标题内容
         pic = cls.__paint_pants_color_history(pic, pants_data)
         # 绘制统计数据
@@ -71,10 +71,10 @@ class PantsRecordPainter:
         return pic
 
     @classmethod
-    def __paint_title(cls, pic: PicGenerator):
+    def __paint_title(cls, name, pic: PicGenerator):
         """ 绘制标题 """
         pic.move_pos(0, 0)
-        pic.paint_center_text(pic.x, "咪莉娅胖次颜色记录", PantsRecordFont.text_font(), Color.BLACK,
+        pic.paint_center_text(pic.x, f"{name}胖次颜色记录", PantsRecordFont.text_font(), Color.BLACK,
                               right_limit=pic.width,
                               row_length=0)
         return pic
