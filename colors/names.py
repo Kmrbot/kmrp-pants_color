@@ -19,4 +19,8 @@ names = {
         "name": "咪莉娅",
         "bg_pic": "miriya.png",
     },
+    "uru": {
+        "name": "uru",
+        "bg_pic": "miriya.png",
+    },
 }
