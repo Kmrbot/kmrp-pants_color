@@ -1,18 +1,18 @@
 from typing import Tuple, Any
 from nonebot import on_regex
 from nonebot.rule import to_me
-from plugins.common_plugins_function import white_list_handle
+from utils.permission import white_list_handle
 from protocol_adapter.protocol_adapter import ProtocolAdapter
 from .database.pants_color import DBPantsColorInfo
 from .painter.pants_record_painter import PantsRecordPainter
-from utils.permission import only_me
 from nonebot.params import RegexGroup
 from .colors.names import names
+from utils.permission import only_me
 
 get_pants_color_record_list = on_regex("^获取(.*)胖次颜色记录$",
                                        rule=to_me(),
                                        priority=5)
-get_pants_color_record_list.__doc__ = """获取咪莉娅胖次颜色记录"""
+get_pants_color_record_list.__doc__ = """获取胖次颜色记录"""
 get_pants_color_record_list.__help_type__ = None
 
 get_pants_color_record_list.handle()(white_list_handle("pants_color"))

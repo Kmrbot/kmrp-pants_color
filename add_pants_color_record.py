@@ -4,7 +4,7 @@ from nonebot import on_regex
 from nonebot.rule import to_me
 from nonebot.matcher import Matcher
 from nonebot.log import logger
-from plugins.common_plugins_function import white_list_handle
+from utils.permission import white_list_handle
 from utils import get_time_zone
 from .database.pants_color import DBPantsColorInfo
 from .colors.pants_color import pants_color_data
