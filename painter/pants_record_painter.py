@@ -125,6 +125,7 @@ class PantsRecordPainter:
     @classmethod
     def __paint_pants_color_each_year(cls, pic: PicGenerator, year, cur_year_data):
         """ 绘制每个年的胖次颜色历史记录 """
+        pic.set_pos(PantsColorBorder.BORDER_PANTS_YEAR_L, pic.y)
         pic.paint_auto_line_text(pic.x, f"{year}年\n", PantsRecordFont.text_font(), Color.BLACK)
         for month in range(len(cur_year_data)):
             # 如果全空就不渲染了
@@ -136,6 +137,7 @@ class PantsRecordPainter:
             if is_not_empty:
                 pic.move_pos(0, PantsColorBorder.BORDER_PANTS_MONTH_D)
                 pic = cls.__paint_pants_color_each_month(pic, year, month + 1, cur_year_data[month])
+        pic.set_pos(PantsColorBorder.BORDER_PANTS_YEAR_L, pic.y)
         return pic
 
     @classmethod
@@ -179,7 +181,7 @@ class PantsRecordPainter:
                 pic.x, pants_img, right_limit=pic.width - PantsColorBorder.BORDER_PANTS_DAY_LR)
             pic.move_pos(15, -10)
         pic.paint_auto_line_text(pic.x, "\n", PantsRecordFont.text_font())
-        pic.set_pos(-PantsColorBorder.BORDER_PANTS_MONTH_LR, pic.y)
+        pic.set_pos(PantsColorBorder.BORDER_PANTS_MONTH_LR, pic.y)
         return pic
 
     @classmethod
