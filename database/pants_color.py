@@ -1,11 +1,11 @@
 import copy
 import re
-from database.interface.db_impl_interface import DBImplInterface
+from database.interface.db_impl_interface import DBNoCacheImplInterface
 from database.db_manager import DBManager
 
 
 # B站翻译信息
-class DBPantsColorInfo(DBImplInterface):
+class DBPantsColorInfo(DBNoCacheImplInterface):
 
     """
     key: {name}
@@ -28,7 +28,7 @@ class DBPantsColorInfo(DBImplInterface):
         if data is None:
             data = copy.deepcopy(cls._default_value)
         data[date] = color
-        cls.set_data(key, data)
+        cls.set_data_by_key(key, data)
 
     @classmethod
     def get_pants_color_list(cls, name):
