@@ -14,7 +14,7 @@ from kmrbot.core.bot_base_info import KmrBotBaseInfo
 from nonebot.log import logger
 from .pants_record_border import PantsColorBorder
 from utils import get_time_zone
-from ..colors.pants_color import pants_color_data
+from ..colors.pants_color import get_color_by_value
 
 
 class PantsColorType(enum.Enum):
@@ -159,17 +159,17 @@ class PantsRecordPainter:
         pic.set_pos(PantsColorBorder.BORDER_PANTS_MONTH_LR, pic.y)
         for each_day in range(len(cur_month_data)):
             color = None
-            color_str = cur_month_data[each_day]
-            if color_str == "":
+            color_value = cur_month_data[each_day]
+            if color_value == "":
                 # 未记录
                 color_type = PantsColorType.COLOR_TYPE_NO_RECORD
             else:
-                color_data = pants_color_data.get(color_str)
+                color_data = get_color_by_value(color_value)
                 if color_data is None:
-                    logger.warning(f"__paint_pants_color_each_month invalid color_data ! color_str = {color_str}")
+                    logger.warning(f"__paint_pants_color_each_month invalid color_data ! color_value = {color_value}")
                     color_type = PantsColorType.COLOR_TYPE_INVALID_COLOR
                 else:
-                    color_value = color_data["colors"][0]  # 暂时先只画第1个颜色
+                    color_value = color_data.colors[0]  # 暂时先只画第1个颜色
                     color = ((color_value >> 16) & 0xff, (color_value >> 8) & 0xff, color_value & 0xff)
                     color_type = PantsColorType.COLOR_TYPE_OK
             pants_img = cls.__get_pants_pic(

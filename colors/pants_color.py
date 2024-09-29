@@ -6,85 +6,40 @@ class PantsType(enum.Enum):
     PANTS_TYPE_FLOWER = 0x001,  # 花纹
 
 
-pants_color_data = {
-    "红色": {
-        "colors": [0xFF0000],
-        "type": [PantsType.PANTS_TYPE_SOLID],
-        "db_color": "红色",
-    },
-    "绿色": {
-        "colors": [0x00FF00],
-        "type": [PantsType.PANTS_TYPE_SOLID],
-        "db_color": "绿色",
-    },
-    "蓝色": {
-        "colors": [0x0000FF],
-        "type": [PantsType.PANTS_TYPE_SOLID],
-        "db_color": "蓝色",
-    },
-    "淡蓝色": {
-        "colors": [0x00FFFF],
-        "type": [PantsType.PANTS_TYPE_SOLID],
-        "db_color": "淡蓝色",
-    },
-    "花纹淡蓝色": {
-        "colors": [0x00FFFF],
-        "type": [PantsType.PANTS_TYPE_FLOWER],
-        "db_color": "花纹淡蓝色",
-    },
-    "水色": {
-        "colors": [0x00FFFF],
-        "type": [PantsType.PANTS_TYPE_SOLID],
-        "db_color": "淡蓝色",
-    },
-    "紫色": {
-        "colors": [0xFF00FF],
-        "type": [PantsType.PANTS_TYPE_SOLID],
-        "db_color": "紫色",
-    },
-    "粉色": {
-        "colors": [0xFF80C0],
-        "type": [PantsType.PANTS_TYPE_SOLID],
-        "db_color": "粉色",
-    },
-    "黑色": {
-        "colors": [0x000000],
-        "type": [PantsType.PANTS_TYPE_SOLID],
-        "db_color": "黑色",
-    },
-    "白色": {
-        "colors": [0xFFFFFF],
-        "type": [PantsType.PANTS_TYPE_SOLID],
-        "db_color": "白色",
-    },
-    "灰色": {
-        "colors": [0x646464],
-        "type": [PantsType.PANTS_TYPE_SOLID],
-        "db_color": "灰色",
-    },
-    "金色": {
-        "colors": [0xFFE640],
-        "type": [PantsType.PANTS_TYPE_SOLID],
-        "db_color": "金色",
-    },
-    "薰衣草色": {
-        "colors": [0xB57EDC],
-        "type": [PantsType.PANTS_TYPE_SOLID],
-        "db_color": "薰衣草色",
-    },
-    "白色和粉色": {
-        "colors": [0xFFFFFF, 0xFF80C0],
-        "type": [PantsType.PANTS_TYPE_SOLID, PantsType.PANTS_TYPE_SOLID],
-        "db_color": "白色和粉色",
-    },
-    "白色和紫色": {
-        "colors": [0xFFFFFF, 0xFF00FF],
-        "type": [PantsType.PANTS_TYPE_SOLID, PantsType.PANTS_TYPE_SOLID],
-        "db_color": "白色和紫色",
-    },
-    "白色和紫色花纹": {
-        "colors": [0xFFFFFF, 0xFF00FF],
-        "type": [PantsType.PANTS_TYPE_SOLID, PantsType.PANTS_TYPE_FLOWER],
-        "db_color": "白色和紫色花纹",
-    }
-}
+class PantsColor(enum.Enum):
+    PANTS_COLOR_NONE = 0, [""], [], []
+    PANTS_COLOR_RED = 1, ["红色"], [0xFF0000], [PantsType.PANTS_TYPE_SOLID]
+    PANTS_COLOR_GREEN = 20, ["绿色"], [0x00FF00], [PantsType.PANTS_TYPE_SOLID]
+    PANTS_COLOR_BLUE = 30, ["蓝色"], [0x0000FF], [PantsType.PANTS_TYPE_SOLID]
+    PANTS_COLOR_LIGHT_BLUE = 40, ["淡蓝色", "水色"], [0x00FFFF], [PantsType.PANTS_TYPE_SOLID]
+    PANTS_COLOR_LIGHT_BLUE_FLOWER = 41, ["花纹淡蓝色"], [0x00FFFF], [PantsType.PANTS_TYPE_FLOWER]
+    PANTS_COLOR_PURPLE = 50, ["紫色"], [0xFF00FF], [PantsType.PANTS_TYPE_SOLID]
+    PANTS_COLOR_PINK = 60, ["粉色"], [0xFF80C0], [PantsType.PANTS_TYPE_SOLID]
+    PANTS_COLOR_BLACK = 70, ["黑色"], [0x000000], [PantsType.PANTS_TYPE_SOLID]
+    PANTS_COLOR_WHITE = 80, ["白色"], [0xFFFFFF], [PantsType.PANTS_TYPE_SOLID]
+    PANTS_COLOR_GRAY = 90, ["灰色"], [0x646464], [PantsType.PANTS_TYPE_SOLID]
+    PANTS_COLOR_GOLD = 100, ["金色"], [0xFFE640], [PantsType.PANTS_TYPE_SOLID]
+    PANTS_COLOR_LAVENDER = 110, ["薰衣草色"], [0xB57EDC], [PantsType.PANTS_TYPE_SOLID]
+    PANTS_COLOR_WHITE_PINK = 120, ["白色和粉色"], [0xFFFFFF, 0xFF80C0], [PantsType.PANTS_TYPE_SOLID, PantsType.PANTS_TYPE_SOLID]
+    PANTS_COLOR_WHITE_PURPLE = 130, ["白色和紫色"], [0xFFFFFF, 0xFF00FF], [PantsType.PANTS_TYPE_SOLID, PantsType.PANTS_TYPE_SOLID]
+    PANTS_COLOR_WHITE_PURPLE_FLOWER = 140, ["白色和紫色花纹"], [0xFFFFFF, 0xFF00FF], [PantsType.PANTS_TYPE_SOLID, PantsType.PANTS_TYPE_FLOWER]
+
+    def __init__(self, color_value, color_names, colors, color_type):
+        self.color_value = color_value
+        self.color_names = color_names
+        self.colors = colors
+        self.color_type = color_type
+
+
+def get_color_by_name(color_name: str):
+    for color in PantsColor:
+        if color_name in color.color_names:
+            return color
+    return None
+
+
+def get_color_by_value(color_value: str):
+    for color in PantsColor:
+        if color.color_value == color_value:
+            return color
+    return None
