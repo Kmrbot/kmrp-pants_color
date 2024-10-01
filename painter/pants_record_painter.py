@@ -14,7 +14,7 @@ from kmrbot.core.bot_base_info import KmrBotBaseInfo
 from nonebot.log import logger
 from .pants_record_border import PantsColorBorder
 from utils import get_time_zone
-from ..colors.pants_color import get_color_by_value
+from ..colors import get_pants_data_by_color_value
 
 
 class PantsColorType(enum.Enum):
@@ -160,21 +160,27 @@ class PantsRecordPainter:
         for each_day in range(len(cur_month_data)):
             color = None
             color_value = cur_month_data[each_day]
+            pants_type = 0
+            pants_pic = "pants/normal.png"  # 默认的
             if color_value == "":
                 # 未记录
                 color_type = PantsColorType.COLOR_TYPE_NO_RECORD
             else:
-                color_data = get_color_by_value(color_value)
+                color_data = get_pants_data_by_color_value(color_value)
                 if color_data is None:
                     logger.warning(f"__paint_pants_color_each_month invalid color_data ! color_value = {color_value}")
                     color_type = PantsColorType.COLOR_TYPE_INVALID_COLOR
                 else:
-                    color_value = color_data.colors[0]  # 暂时先只画第1个颜色
+                    color_value = 0 if len(color_data["code"]) == 0 else int(color_data["code"][0], 16)  # 暂时先只画第1个颜色
+                    pants_type = color_data["type"]
+                    pants_pic = color_data["pants_pic"]
                     color = ((color_value >> 16) & 0xff, (color_value >> 8) & 0xff, color_value & 0xff)
                     color_type = PantsColorType.COLOR_TYPE_OK
             pants_img = cls.__get_pants_pic(
                 color_type,
                 color,
+                pants_type,
+                pants_pic,
                 is_weekday=datetime.datetime.strptime(f"{year}.{month}.{each_day + 1}", "%Y.%m.%d").weekday() < 5)
             pic.move_pos(-15, 10)  # 图片向下移动一点会好看一些
             pic.paint_auto_line_pic(
@@ -238,25 +244,26 @@ class PantsRecordPainter:
         return pic
 
     @classmethod
-    def __get_pants_pic(cls, color_type, pants_color, is_weekday=False) -> Image:
+    def __get_pants_pic(cls, color_type, pants_color, pants_type, pants_pic, is_weekday=False) -> Image:
         img_base_size = (56, 35)
         # 如果缓存有 就用缓存的
-        dst_img = PantsRecordPainter.__pants_pic_cache.get((color_type, pants_color))
+        dst_img = PantsRecordPainter.__pants_pic_cache.get((color_type, pants_color, pants_type, pants_pic))
         if dst_img is None:
             img_base = Image.new("RGBA", img_base_size, (255, 255, 255, 0))
             if pants_color is not None:
                 pants_size = (50, 25)
-                pants_img = Image.open(f"{os.path.dirname(__file__)}/pants.png")
+                pants_img = Image.open(f"{os.path.dirname(__file__)}/{pants_pic}")
                 pants_img = pants_img.convert("RGBA")
                 pants_img = pants_img.resize(pants_size)
-                d = pants_img.getdata()
-                img_tmp = []
-                for item in d:
-                    if item[0] > 200 and item[3] > 30:
-                        img_tmp.append(pants_color)
-                    else:
-                        img_tmp.append(item)
-                pants_img.putdata(img_tmp)
+                if pants_type == 0 or pants_type == 1:
+                    d = pants_img.getdata()
+                    img_tmp = []
+                    for item in d:
+                        if item[0] > 200 and item[3] > 30:
+                            img_tmp.append(pants_color)
+                        else:
+                            img_tmp.append(item)
+                    pants_img.putdata(img_tmp)
                 img_base.paste(pants_img, (3, 5))
             else:
                 draw = ImageDraw.Draw(img_base)
@@ -265,7 +272,7 @@ class PantsRecordPainter:
                     draw.text(paint_pos, "？", Color.RED.value, font=PantsRecordFont.text_font())
                 elif color_type == PantsColorType.COLOR_TYPE_INVALID_COLOR:
                     draw.text(paint_pos, "？", Color.GREEN.value, font=PantsRecordFont.text_font())
-            PantsRecordPainter.__pants_pic_cache[(color_type, pants_color)] = img_base
+            PantsRecordPainter.__pants_pic_cache[(color_type, pants_color, pants_type, pants_pic)] = img_base
             dst_img = img_base
 
         # dst_img = copy.deepcopy(dst_img)
@@ -280,4 +287,4 @@ class PantsRecordPainter:
         # dst_img.alpha_composite(side_border_img)
         return dst_img
 
-    __pants_pic_cache: Dict[Tuple[int, int], Image.Image] = {}   # Dict[Tuple[图片类型PantsColorType, 颜色color], 图片]
+    __pants_pic_cache: Dict[Tuple[int, int, int, int], Image.Image] = {}   # Dict[Tuple[图片类型PantsColorType, 颜色color, 图片类型, 图片url], 图片]

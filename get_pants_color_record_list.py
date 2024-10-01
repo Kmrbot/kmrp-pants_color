@@ -9,7 +9,7 @@ from utils.task_deliver import TaskDeliverManager
 from .database.pants_color import DBPantsColorInfo
 from .painter.pants_record_painter import PantsRecordPainter
 from nonebot.params import RegexGroup
-from .colors.names import names
+from .colors import get_user_data_by_user_name
 from utils.permission import only_me
 
 get_pants_color_record_list = on_regex("^获取(.*)胖次颜色记录$",
@@ -38,12 +38,13 @@ def generate_pic_task(**kwargs):
 async def _(event: AdapterMessageEvent, params: Tuple[Any, ...] = RegexGroup()):
     """获取咪莉娅胖次颜色记录"""
     name = params[0]
-    if name not in names or names[name]["name"] is None:
+    user_data = get_user_data_by_user_name(name)
+    if user_data is None:
         await get_pants_color_record_list.finish("无效目标名！")
     TaskDeliverManager.add_task(
         generate_pic_task,
-        name=names[name]["name"],
-        bg_pic=names[name]["bg_pic"],
+        name=name,
+        bg_pic=user_data["bg_pic"],
         msg_type=ProtocolAdapter.get_msg_type(event),
         msg_type_id=ProtocolAdapter.get_msg_type_id(event))
-    await get_pants_color_record_list.finish("正在绘制中。。。")
+    await get_pants_color_record_list.finish("正在绘制中...")
