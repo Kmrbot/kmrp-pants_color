@@ -205,17 +205,18 @@ class PantsRecordPainter:
             color_count[each_pants_data["color"]] += 1
         if len(color_count) != 0:
             arr = []
-            for color_str, count in color_count.items():
-                arr.append({"count": count, "color": color_str})
+            for color_value, count in color_count.items():
+                arr.append({"count": count, "color": color_value})
             arr.sort(key=lambda t: t["count"], reverse=True)
             for each_color_count_data in arr:
                 count = each_color_count_data["count"]
-                color_str = each_color_count_data["color"]
+                color_value = each_color_count_data["color"]
                 # color_value = Color.BLACK  # 默认
                 # if pants_color_data.get(color_str) is not None:
                 #     color_value = pants_color_data[color_str]["colors"][0]  # 暂时先只画第1个颜色
                 # color_value转颜色数据
-                pic.paint_auto_line_text(pic.x, f"{color_str}：{count}次\n", PantsRecordFont.text_font(), Color.BLACK)
+                color_data = get_pants_data_by_color_value(color_value)
+                pic.paint_auto_line_text(pic.x, f"{color_data['color']}：{count}次\n", PantsRecordFont.text_font(), Color.BLACK)
 
         return pic
 
