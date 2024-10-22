@@ -216,7 +216,8 @@ class PantsRecordPainter:
                 #     color_value = pants_color_data[color_str]["colors"][0]  # 暂时先只画第1个颜色
                 # color_value转颜色数据
                 color_data = get_pants_data_by_color_value(color_value)
-                pic.paint_auto_line_text(pic.x, f"{color_data['color']}：{count}次\n", PantsRecordFont.text_font(), Color.BLACK)
+                color_data = color_data["color"][0] if color_data["color"] else "INVALID_COLOR"
+                pic.paint_auto_line_text(pic.x, f"{color_data}：{count}次\n", PantsRecordFont.text_font(), Color.BLACK)
 
         return pic
 
@@ -235,9 +236,11 @@ class PantsRecordPainter:
                             ["K", "m", "r", "Bot", KmrBotBaseInfo.get_version()],
                             PantsRecordFont.text_font(),
                             [Color.DEEPSKYBLUE, Color.FUCHSIA, Color.CRIMSON, Color.BLACK, Color.RED, Color.GRAY])
-        pic.draw_text_right(20, f"Author : {KmrBotBaseInfo.get_author_name()}", PantsRecordFont.text_font(),
-                            Color.HELP_DESIGNER_AUTHOR_NAME)
-        pic.draw_text_right(20, f"{KmrBotBaseInfo.get_author_url()}", PantsRecordFont.text_font(), Color.LINK)
+        if len(KmrBotBaseInfo.get_author_name()) != 0:
+            pic.draw_text_right(20, f"Author : {KmrBotBaseInfo.get_author_name()}", PantsRecordFont.text_font(),
+                                Color.HELP_DESIGNER_AUTHOR_NAME)
+        if len(KmrBotBaseInfo.get_author_url()) != 0:
+            pic.draw_text_right(20, f"{KmrBotBaseInfo.get_author_url()}", PantsRecordFont.text_font(), Color.LINK)
         #pic.draw_text_right(20, f"Git Update SHA-1 : {git_commit_info['commit_id']}", PantsRecordFont.text_font(), Color.GREEN)
         #pic.draw_text_right(20, f"Git Update Date : {git_commit_info['date']}", PantsRecordFont.text_font(), Color.GREEN)
         pic.set_row_space(origin_row_space)

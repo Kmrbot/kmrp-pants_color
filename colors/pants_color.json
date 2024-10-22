@@ -1,14 +1,12 @@
 {
 	"info": [{
-		"value": 1,
+		"value": 10,
 		"color": [
 			"红色"
 		],
-		"code": [
-			"0xFF0000"
-		],
-		"type": 0,
-		"pants_pic": "pants/normal.png"
+		"code": [],
+		"type": 2,
+		"pants_pic": "pants/品红.png"
 	}, {
 		"value": 20,
 		"color": [
@@ -24,22 +22,18 @@
 		"color": [
 			"蓝色"
 		],
-		"code": [
-			"0x0000FF"
-		],
-		"type": 0,
-		"pants_pic": "pants/normal.png"
+		"code": [],
+		"type": 2,
+		"pants_pic": "pants/蓝.png"
 	}, {
 		"value": 40,
 		"color": [
 			"淡蓝色",
 			"水色"
 		],
-		"code": [
-			"0x00FFFF"
-		],
-		"type": 0,
-		"pants_pic": "pants/normal.png"
+		"code": [],
+		"type": 2,
+		"pants_pic": "pants/淡蓝.png"
 	}, {
 		"value": 41,
 		"color": [
@@ -55,11 +49,18 @@
 		"color": [
 			"紫色"
 		],
-		"code": [
-			"0xFF00FF"
+		"code": [],
+		"type": 2,
+		"pants_pic": "pants/紫.png"
+	}, {
+		"value": 51,
+		"color": [
+			"紫蕾丝",
+			"紫色蕾丝"
 		],
-		"type": 0,
-		"pants_pic": "pants/normal.png"
+		"code": [],
+		"type": 2,
+		"pants_pic": "pants/紫蕾丝.png"
 	}, {
 		"value": 60,
 		"color": [
@@ -75,21 +76,17 @@
 		"color": [
 			"黑色"
 		],
-		"code": [
-			"0x000000"
-		],
-		"type": 0,
-		"pants_pic": "pants/normal.png"
+		"code": [],
+		"type": 2,
+		"pants_pic": "pants/黑.png"
 	}, {
 		"value": 80,
 		"color": [
 			"白色"
 		],
-		"code": [
-			"0xFFFFFF"
-		],
-		"type": 0,
-		"pants_pic": "pants/normal.png"
+		"code": [],
+		"type": 2,
+		"pants_pic": "pants/白.png"
 	}, {
 		"value": 90,
 		"color": [
@@ -103,13 +100,12 @@
 	}, {
 		"value": 100,
 		"color": [
+			"黄色",
 			"金色"
 		],
-		"code": [
-			"0xFFE640"
-		],
-		"type": 0,
-		"pants_pic": "pants/normal.png"
+		"code": [],
+		"type": 2,
+		"pants_pic": "pants/黄.png"
 	}, {
 		"value": 110,
 		"color": [
@@ -121,7 +117,7 @@
 		"type": 0,
 		"pants_pic": "pants/normal.png"
 	}, {
-		"value": 120,
+		"value": 510,
 		"color": [
 			"白色和粉色"
 		],
@@ -132,7 +128,7 @@
 		"type": 0,
 		"pants_pic": "pants/normal.png"
 	}, {
-		"value": 130,
+		"value": 520,
 		"color": [
 			"白色和紫色"
 		],
@@ -143,7 +139,7 @@
 		"type": 0,
 		"pants_pic": "pants/normal.png"
 	}, {
-		"value": 140,
+		"value": 530,
 		"color": [
 			"白色和紫色花纹"
 		],
@@ -161,5 +157,29 @@
 		"code": [],
 		"type": 2,
 		"pants_pic": "pants/doll_bear.png"
+	}, {
+		"value": 1020,
+		"color": [
+			"三眼仔"
+		],
+		"code": [],
+		"type": 2,
+		"pants_pic": "pants/三眼仔.png"
+	}, {
+		"value": 1030,
+		"color": [
+			"熊"
+		],
+		"code": [],
+		"type": 2,
+		"pants_pic": "pants/熊.png"
+	}, {
+		"value": 1040,
+		"color": [
+			"猪"
+		],
+		"code": [],
+		"type": 2,
+		"pants_pic": "pants/猪.png"
 	}]
 }
