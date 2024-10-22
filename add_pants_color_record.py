@@ -62,6 +62,16 @@ async def _(matcher: Matcher,
     new_color_name = get_pants_data_by_color_value(new_color_value)
     old_color_value = DBPantsColorInfo.get_pants_color(name, date)
 
+    # 临时代码，用来复写所有原有的胖次颜色
+    # kv = {
+    #     530: 520,
+    # }
+    # for data in DBPantsColorInfo.get_pants_color_list(name):
+    #     if kv.get(data["color"]) is not None:
+    #         logger.info(f"Rewrite! old_old_color = {data['color']} new = {kv[data['color']]}")
+    #         DBPantsColorInfo.add_pants_color(name, data['time'], kv[data['color']])
+    # await add_pants_color_record.finish()
+
     if old_color_value is not None:
         if old_color_value != new_color_value:
             old_color_data = get_pants_data_by_color_value(old_color_value)
