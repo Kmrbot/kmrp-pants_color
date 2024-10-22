@@ -66,11 +66,9 @@
 		"color": [
 			"粉色"
 		],
-		"code": [
-			"0xFF80C0"
-		],
-		"type": 1,
-		"pants_pic": "pants/normal.png"
+		"code": [],
+		"type": 2,
+		"pants_pic": "pants/粉.png"
 	}, {
 		"value": 70,
 		"color": [
