@@ -48,6 +48,8 @@ class PantsRecordPainter:
         pic = cls.__paint_pants_color_history(pic, pants_data)
         # 绘制统计数据
         pic = cls.__paint_statistics_data(pic, pants_data)
+        # 设置当前的高度
+        pic.set_height(pic.y + PantsColorBorder.BORDER_DESIGNER_INFO_BOTTOM_HEIGHT)
         # 绘制开发者信息
         pic = cls.__paint_designed_info(pic)
 
@@ -68,7 +70,6 @@ class PantsRecordPainter:
 
         pic.draw_img(background_image, pic.xy)
         # pic.set_height(background_image.height)
-        pic.set_height(8000)    # 这里写死，因为大小跟height没啥关系
         return pic
 
     @classmethod
