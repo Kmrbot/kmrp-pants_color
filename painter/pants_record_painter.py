@@ -36,7 +36,7 @@ class PantsRecordPainter:
     @classmethod
     def generate_pants_record_pic(cls, name, bg_pic, pants_data):
         width = 1920
-        height = 10000
+        height = 20000
         pic = PicGenerator(width, height)
         pic = pic.draw_rectangle(0, 0, width, height, Color.WHITE)
 

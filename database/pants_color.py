@@ -17,25 +17,32 @@ class DBPantsColorInfo(DBNoCacheImplInterface):
     def get_pants_color(cls, name, date):
         """ 获取胖次颜色 """
         key = cls.generate_key(name)
-        data = cls.get_data_by_key(key)
+        data, is_success = cls.get_data_by_key(key)
+        if not is_success:
+            return None
         return data.get(date) if data else None
 
     @classmethod
     def add_pants_color(cls, name, date, color):
         """ 添加胖次颜色 """
         key = cls.generate_key(name)
-        data = cls.get_data_by_key(key)
+        data, is_success = cls.get_data_by_key(key)
+        if not is_success:
+            return False
         if data is None:
             data = copy.deepcopy(cls._default_value)
         data[date] = color
         cls.set_data_by_key(key, data)
+        return True
 
     @classmethod
     def get_pants_color_list(cls, name):
         """ 获取胖次颜色列表 """
         key = cls.generate_key(name)
-        data = cls.get_data_by_key(key)
+        data, is_success = cls.get_data_by_key(key)
         ret_data = []
+        if not is_success:
+            return ret_data
         for key, single_data in data.items():
             ret_data.append({
                 "time": key,

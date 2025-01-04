@@ -81,6 +81,8 @@ async def _(matcher: Matcher,
             return await add_pants_color_record.finish(f"与原记录相同！")
     else:
         color_replace_str = ""
-    DBPantsColorInfo.add_pants_color(name, date, new_color_value)
+    is_success = DBPantsColorInfo.add_pants_color(name, date, new_color_value)
     await add_pants_color_record.finish(color_replace_str +
-                                        f"已成功添加{name}胖次颜色记录： {date} 的胖次颜色为 {new_color_name['color'][0]}")
+                                        f"已成功添加{name}胖次颜色记录： {date} 的胖次颜色为 {new_color_name['color'][0]}"
+                                        if is_success else
+                                        f"添加{name}胖次颜色记录失败")
