@@ -1,2 +1,3 @@
+from .get_pants_color_list import get_pants_color_list
 from .add_pants_color_record import add_pants_color_record
 from .get_pants_color_record_list import get_pants_color_record_list
