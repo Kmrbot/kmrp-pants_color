@@ -103,6 +103,13 @@
 		"type": 2,
 		"pants_pic": "pants/淡紫.png"
 	}, {
+		"value": 120,
+		"color": [
+			"海军蓝"
+		],
+		"type": 2,
+		"pants_pic": "pants/海军蓝.png"
+	},{
 		"value": 510,
 		"color": [
 			"粉花纹",
