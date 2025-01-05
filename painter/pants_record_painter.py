@@ -160,7 +160,6 @@ class PantsRecordPainter:
         pic.paint_auto_line_text(pic.x, "\n", PantsRecordFont.text_font(), Color.BLACK)
         pic.set_pos(PantsColorBorder.BORDER_PANTS_MONTH_LR, pic.y)
         for each_day in range(len(cur_month_data)):
-            color = None
             color_value = cur_month_data[each_day]
             pants_pic = "pants/normal.png"  # 默认的
             if color_value == "":
@@ -173,13 +172,10 @@ class PantsRecordPainter:
                     logger.warning(f"__paint_pants_color_each_month invalid color_data ! color_value = {color_value}")
                     color_type = PantsColorRecordType.COLOR_TYPE_RECORD_INVALID_COLOR
                 else:
-                    color_value = 0 if len(color_data["code"]) == 0 else int(color_data["code"][0], 16)  # 暂时先只画第1个颜色
                     pants_pic = color_data["pants_pic"]
-                    color = ((color_value >> 16) & 0xff, (color_value >> 8) & 0xff, color_value & 0xff)
                     color_type = PantsColorRecordType.COLOR_TYPE_RECORD_OK
             pants_img = cls.__get_pants_pic(
                 color_type,
-                color,
                 pants_pic,
                 is_weekday=datetime.datetime.strptime(f"{year}.{month}.{each_day + 1}", "%Y.%m.%d").weekday() < 5)
             pic.move_pos(-15, 10)  # 图片向下移动一点会好看一些
@@ -248,13 +244,13 @@ class PantsRecordPainter:
         return pic
 
     @classmethod
-    def __get_pants_pic(cls, color_type, pants_color, pants_pic, is_weekday=False) -> Image:
+    def __get_pants_pic(cls, color_type, pants_pic, is_weekday=False) -> Image:
         img_base_size = (56, 35)
         # 如果缓存有 就用缓存的
-        dst_img = PantsRecordPainter.__pants_pic_cache.get((color_type, pants_color, pants_pic))
+        dst_img = PantsRecordPainter.__pants_pic_cache.get((color_type, pants_pic))
         if dst_img is None:
             img_base = Image.new("RGBA", img_base_size, (255, 255, 255, 0))
-            if pants_color is not None:
+            if pants_pic is not None:
                 pants_size = (50, 25)
                 pants_img = Image.open(f"{os.path.dirname(__file__)}/{pants_pic}")
                 pants_img = pants_img.convert("RGBA")
@@ -267,7 +263,7 @@ class PantsRecordPainter:
                     draw.text(paint_pos, "？", Color.RED.value, font=PantsRecordFont.text_font())
                 elif color_type == PantsColorRecordType.COLOR_TYPE_RECORD_INVALID_COLOR:
                     draw.text(paint_pos, "？", Color.GREEN.value, font=PantsRecordFont.text_font())
-            PantsRecordPainter.__pants_pic_cache[(color_type, pants_color, pants_pic)] = img_base
+            PantsRecordPainter.__pants_pic_cache[(color_type, pants_pic)] = img_base
             dst_img = img_base
 
         # dst_img = copy.deepcopy(dst_img)
@@ -282,4 +278,4 @@ class PantsRecordPainter:
         # dst_img.alpha_composite(side_border_img)
         return dst_img
 
-    __pants_pic_cache: Dict[Tuple[int, int, int], Image.Image] = {}   # Dict[Tuple[图片类型PantsColorType, 颜色color, 图片url], 图片]
+    __pants_pic_cache: Dict[Tuple[int, int], Image.Image] = {}   # Dict[Tuple[图片类型PantsColorType, 图片url], 图片]
