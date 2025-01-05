@@ -1,5 +1,13 @@
 {
 	"info": [{
+		"value": 0,
+		"color": [
+			""
+		],
+		"code": [],
+		"type": 0,
+		"pants_pic": "pants/未记录.png"
+	}, {
 		"value": 10,
 		"color": [
 			"红色"
@@ -152,5 +160,13 @@
 		"code": [],
 		"type": 2,
 		"pants_pic": "pants/猪.png"
+	}, {
+		"value": 1040,
+		"color": [
+			"创可贴"
+		],
+		"code": [],
+		"type": 2,
+		"pants_pic": "pants/创可贴.png"
 	}]
 }

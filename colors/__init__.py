@@ -1,7 +1,15 @@
+import enum
 import json
 import os.path
-from typing import Optional
-from nonebot.log import logger
+
+
+# pants_color.json -> type
+# 0 系统保留，不可手动录入
+# 1 纯颜色
+# 2 指定图片
+class PantsColorType(enum.Enum):
+    COLOR_TYPE_SYSTEM = 0
+    COLOR_TYPE_PIC = 2
 
 
 def load_name_data():
@@ -23,13 +31,13 @@ def get_user_data_by_user_name(user_name: str):
 
 def get_pants_data_by_color_name(color_name: str):
     for data in load_pants_color_data()["info"]:
-        if color_name in data["color"]:
+        if color_name in data["color"] and data["type"] != PantsColorType.COLOR_TYPE_SYSTEM.value:
             return data
     return None
 
 
 def get_pants_data_by_color_value(color_value: str):
     for data in load_pants_color_data()["info"]:
-        if color_value == data["value"]:
+        if color_value == data["value"] and data["type"] != PantsColorType.COLOR_TYPE_SYSTEM.value:
             return data
     return None
