@@ -9,7 +9,8 @@
 	}, {
 		"value": 10,
 		"color": [
-			"红色"
+			"红色",
+			"品红"
 		],
 		"type": 2,
 		"pants_pic": "pants/品红.png"
@@ -54,6 +55,7 @@
 		"value": 51,
 		"color": [
 			"紫蕾丝",
+			"蕾丝紫",
 			"紫色蕾丝"
 		],
 		"type": 2,
@@ -72,6 +74,15 @@
 		],
 		"type": 2,
 		"pants_pic": "pants/黑.png"
+	},{
+		"value": 71,
+		"color": [
+			"黑蕾丝",
+			"黑色蕾丝",
+			"蕾丝黑"
+		],
+		"type": 2,
+		"pants_pic": "pants/黑蕾丝.png"
 	}, {
 		"value": 80,
 		"color": [
