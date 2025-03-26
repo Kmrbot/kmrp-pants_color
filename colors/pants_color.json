@@ -173,5 +173,13 @@
 		],
 		"type": 2,
 		"pants_pic": "pants/创可贴.png"
+	}, {
+		"value": 1050,
+		"color": [
+			"鼠",
+			"米老鼠"
+		],
+		"type": 2,
+		"pants_pic": "pants/鼠.png"
 	}]
 }
