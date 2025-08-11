@@ -128,7 +128,10 @@ class PantsRecordPainter:
     def __paint_pants_color_each_year(cls, pic: PicGenerator, year, cur_year_data):
         """ 绘制每个年的胖次颜色历史记录 """
         pic.set_pos(PantsColorBorder.BORDER_PANTS_YEAR_L, pic.y)
-        pic.paint_auto_line_text(pic.x, f"{year}年\n", PantsRecordFont.text_font(), Color.BLACK)
+        pic.paint_auto_line_text(
+            pic.x,
+            [PicGenerator.AutoLineTextData(text=f"{year}年\n", color=Color.BLACK)],
+            PantsRecordFont.text_font())
         for month in range(len(cur_year_data)):
             # 如果全空就不渲染了
             is_not_empty = False
@@ -146,7 +149,10 @@ class PantsRecordPainter:
     def __paint_pants_color_each_month(cls, pic: PicGenerator, year, month, cur_month_data):
         """ 绘制每个月的胖次颜色历史记录 """
         pic.set_pos(PantsColorBorder.BORDER_PANTS_MONTH_LR, pic.y + PantsColorBorder.BORDER_PANTS_DAY_D)
-        pic.paint_auto_line_text(pic.x, f"{month}月\n", PantsRecordFont.text_font(), Color.BLACK)
+        pic.paint_auto_line_text(
+            pic.x,
+            [PicGenerator.AutoLineTextData(text=f"{month}月\n", color=Color.BLACK)],
+            PantsRecordFont.text_font())
 
         for each_day in range(len(cur_month_data)):
             # 渲染日期数字
@@ -155,9 +161,15 @@ class PantsRecordPainter:
             else:
                 day_str = ""
             pos_x = pic.x
-            pic.paint_auto_line_text(pic.x, day_str, PantsRecordFont.text_font(), Color.BLACK)
+            pic.paint_auto_line_text(
+                pic.x,
+                [PicGenerator.AutoLineTextData(text=day_str, color=Color.BLACK)],
+                PantsRecordFont.text_font())
             pic.set_pos(pos_x + 56, pic.y)
-        pic.paint_auto_line_text(pic.x, "\n", PantsRecordFont.text_font(), Color.BLACK)
+        pic.paint_auto_line_text(
+            pic.x,
+            [PicGenerator.AutoLineTextData(text="\n", color=Color.BLACK)],
+            PantsRecordFont.text_font())
         pic.set_pos(PantsColorBorder.BORDER_PANTS_MONTH_LR, pic.y)
         for each_day in range(len(cur_month_data)):
             color_value = cur_month_data[each_day]
@@ -182,7 +194,10 @@ class PantsRecordPainter:
             pic.paint_auto_line_pic(
                 pic.x, pants_img, right_limit=pic.width - PantsColorBorder.BORDER_PANTS_DAY_LR)
             pic.move_pos(15, -10)
-        pic.paint_auto_line_text(pic.x, "\n", PantsRecordFont.text_font())
+        pic.paint_auto_line_text(
+            pic.x,
+            [PicGenerator.AutoLineTextData(text="\n", color=Color.BLACK)],
+            PantsRecordFont.text_font())
         pic.set_pos(PantsColorBorder.BORDER_PANTS_MONTH_LR, pic.y)
         return pic
 
@@ -190,7 +205,10 @@ class PantsRecordPainter:
     def __paint_statistics_data(cls, pic: PicGenerator, pants_data):
         """ 绘制统计数据 """
         pic.set_pos(PantsColorBorder.BORDER_PANTS_HISTORY_LR, pic.y + PantsColorBorder.BORDER_STATISTICS_U)
-        pic.paint_auto_line_text(pic.x, "颜色统计：\n", PantsRecordFont.text_font(), Color.BLACK)
+        pic.paint_auto_line_text(
+            pic.x,
+            [PicGenerator.AutoLineTextData(text="颜色统计：\n", color=Color.BLACK)],
+            PantsRecordFont.text_font())
         if len(pants_data) == 0:
             return pic
         # 统计每种颜色的次数
@@ -213,7 +231,10 @@ class PantsRecordPainter:
                 # color_value转颜色数据
                 color_data = get_pants_data_by_color_value(color_value)
                 color_data = color_data["color"][0] if color_data["color"] else "INVALID_COLOR"
-                pic.paint_auto_line_text(pic.x, f"{color_data}：{count}次\n", PantsRecordFont.text_font(), Color.BLACK)
+                pic.paint_auto_line_text(
+                    pic.x,
+                    [PicGenerator.AutoLineTextData(text=f"{color_data}：{count}次\n", color=Color.BLACK)],
+                    PantsRecordFont.text_font(), Color.BLACK)
 
         return pic
 
