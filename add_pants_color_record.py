@@ -4,6 +4,7 @@ from nonebot import on_regex
 from nonebot.rule import to_me
 from nonebot.matcher import Matcher
 from nonebot.log import logger
+from protocol_adapter.protocol_adapter import ProtocolAdapter
 from utils.permission import white_list_handle
 from utils import get_time_zone
 from .database.pants_color import DBPantsColorInfo
@@ -59,7 +60,7 @@ async def _(matcher: Matcher,
     name = results[0]
     date = results[1]
     new_color_value = results[2]
-    new_color_name = get_pants_data_by_color_value(new_color_value)
+    new_color_data = get_pants_data_by_color_value(new_color_value)
     old_color_value = DBPantsColorInfo.get_pants_color(name, date)
 
     if old_color_value is not None:
@@ -71,8 +72,14 @@ async def _(matcher: Matcher,
             return await add_pants_color_record.finish(f"与原记录相同！")
     else:
         color_replace_str = ""
-    is_success = DBPantsColorInfo.add_pants_color(name, date, new_color_value)
-    await add_pants_color_record.finish(color_replace_str +
-                                        f"已成功添加{name}胖次颜色记录： {date} 的胖次颜色为 {new_color_name['color'][0]}"
-                                        if is_success else
-                                        f"添加{name}胖次颜色记录失败")
+    if new_color_data["value"] != 0:
+        is_success = DBPantsColorInfo.add_pants_color(name, date, new_color_value)
+        await add_pants_color_record.finish(color_replace_str +
+                                            f"已成功添加{name}胖次颜色记录： {date} 的胖次颜色为 {new_color_data['color'][0]}"
+                                            if is_success else
+                                            f"添加{name}胖次颜色记录失败")
+    else:
+        is_success = DBPantsColorInfo.del_pants_color(name, date)
+        await add_pants_color_record.finish(ProtocolAdapter.MS.text(
+            f"已成功删除{date} {name}胖次颜色记录" if is_success else
+            f"{date} {name}胖次颜色记录不存在"))

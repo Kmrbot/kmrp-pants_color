@@ -36,6 +36,17 @@ class DBPantsColorInfo(DBNoCacheImplInterface):
         return True
 
     @classmethod
+    def del_pants_color(cls, name, date):
+        """ 移除胖次颜色 """
+        key = cls.generate_key(name)
+        data, is_success = cls.get_data_by_key(key)
+        if not is_success or not data.get(date):
+            return False
+        data.pop(date)
+        cls.set_data_by_key(key, data)
+        return True
+
+    @classmethod
     def get_pants_color_list(cls, name):
         """ 获取胖次颜色列表 """
         key = cls.generate_key(name)
