@@ -9,7 +9,7 @@ from utils.task_deliver import TaskDeliverManager
 from .database.pants_color import DBPantsColorInfo
 from .painter.pants_record_painter import PantsRecordPainter
 from nonebot.params import RegexGroup
-from .colors import get_user_data_by_user_name
+from .colors import get_user_data_by_user_name, get_pants_last_time_by_user_name
 from utils.permission import only_me
 
 get_pants_color_record_list = on_regex("^获取(.*)胖次颜色记录$",
@@ -26,10 +26,11 @@ def generate_pic_task(**kwargs):
     name = kwargs["name"]
     bg_pic = kwargs["bg_pic"]
     pants_color_list = DBPantsColorInfo.get_pants_color_list(name)
+    last_time = get_pants_last_time_by_user_name(name)
     push_data = PushManager.PushData(
         msg_type=kwargs["msg_type"],
         msg_type_id=kwargs["msg_type_id"],
-        message=ProtocolAdapter.MS.image(PantsRecordPainter.generate_pants_record_pic(name, bg_pic, pants_color_list))
+        message=ProtocolAdapter.MS.image(PantsRecordPainter.generate_pants_record_pic(name, last_time, bg_pic, pants_color_list))
     )
     PushManager.notify(push_data)
 

@@ -34,7 +34,7 @@ class PantsRecordFont:
 
 class PantsRecordPainter:
     @classmethod
-    def generate_pants_record_pic(cls, name, bg_pic, pants_data):
+    def generate_pants_record_pic(cls, name, last_time : str | None, bg_pic, pants_data):
         width = 1920
         height = 10000
         pic = PicGenerator(width, height)
@@ -45,9 +45,9 @@ class PantsRecordPainter:
         # 绘制标题内容
         pic = cls.__paint_title(name, pic)
         # 绘制标题内容
-        pic = cls.__paint_pants_color_history(pic, pants_data)
+        pic = cls.__paint_pants_color_history(pic, last_time, pants_data)
         # 绘制统计数据
-        pic = cls.__paint_statistics_data(pic, pants_data)
+        pic = cls.__paint_statistics_data(pic, last_time, pants_data)
         # 设置当前的高度
         pic.set_height(pic.y + PantsColorBorder.BORDER_DESIGNER_INFO_BOTTOM_HEIGHT)
         # 绘制开发者信息
@@ -82,7 +82,7 @@ class PantsRecordPainter:
         return pic
 
     @classmethod
-    def __paint_pants_color_history(cls, pic: PicGenerator, pants_data: List):
+    def __paint_pants_color_history(cls, pic: PicGenerator, last_time: str | None, pants_data: List):
         """ 绘制胖次颜色历史记录 """
         pic.move_pos(-pic.x + PantsColorBorder.BORDER_PANTS_HISTORY_LR, PantsColorBorder.BORDER_TITLE_TO_HISTORY_B)
         if len(pants_data) == 0:
@@ -90,7 +90,10 @@ class PantsRecordPainter:
         paint_data = copy.deepcopy(pants_data)
         paint_data.sort(key=lambda x: datetime.datetime.strptime(x["time"], "%Y.%m.%d").timestamp())   # 排序
 
-        sys_datatime = datetime.datetime.now(get_time_zone())
+        if last_time is None:
+            sys_datatime = datetime.datetime.now(get_time_zone())
+        else:
+            sys_datatime = datetime.datetime.strptime(last_time, "%Y.%m.%d")
         sys_year = sys_datatime.year
         sys_month = sys_datatime.month
         sys_day = sys_datatime.day
@@ -120,6 +123,9 @@ class PantsRecordPainter:
                         12
                         if sys_year > painting_year
                         else sys_month if sys_year == painting_year else 0))
+            # 判断
+            if int(single_paint_data_datetime.timestamp()) > int(sys_datatime.timestamp()):
+                continue
             cur_painting_year_data[painting_month - 1][painting_day - 1] = single_paint_data["color"]
         pic = cls.__paint_pants_color_each_year(pic, cur_painting_year, cur_painting_year_data)
         return pic
@@ -202,7 +208,7 @@ class PantsRecordPainter:
         return pic
 
     @classmethod
-    def __paint_statistics_data(cls, pic: PicGenerator, pants_data):
+    def __paint_statistics_data(cls, pic: PicGenerator, last_time: str | None, pants_data):
         """ 绘制统计数据 """
         pic.set_pos(PantsColorBorder.BORDER_PANTS_HISTORY_LR, pic.y + PantsColorBorder.BORDER_STATISTICS_U)
         pic.paint_auto_line_text(
@@ -211,9 +217,19 @@ class PantsRecordPainter:
             PantsRecordFont.text_font())
         if len(pants_data) == 0:
             return pic
+
+        if last_time is None:
+            sys_datatime = datetime.datetime.now(get_time_zone())
+        else:
+            sys_datatime = datetime.datetime.strptime(last_time, "%Y.%m.%d")
+
         # 统计每种颜色的次数
         color_count = {}
         for each_pants_data in pants_data:
+            pants_data_time = datetime.datetime.strptime(each_pants_data["time"], "%Y.%m.%d")
+            if int(pants_data_time.timestamp()) > int(sys_datatime.timestamp()):
+                continue
+
             if color_count.get(each_pants_data["color"]) is None:
                 color_count[each_pants_data["color"]] = 0
             color_count[each_pants_data["color"]] += 1

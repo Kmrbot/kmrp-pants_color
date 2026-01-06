@@ -1,7 +1,8 @@
 {
 	"info": [{
 		"name": "咪莉娅",
-		"bg_pic": "user/miriya.png"
+		"bg_pic": "user/miriya.png",
+		"last_time": "2025.12.31"
 	}, {
 		"name": "uru",
 		"bg_pic": "user/uru.png"

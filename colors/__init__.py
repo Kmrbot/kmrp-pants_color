@@ -41,3 +41,9 @@ def get_pants_data_by_color_value(color_value: str):
         if color_value == data["value"] and data["type"] != PantsColorType.COLOR_TYPE_SYSTEM.value:
             return data
     return None
+
+def get_pants_last_time_by_user_name(user_name: str):
+    for data in load_name_data()["info"]:
+        if user_name == data["name"]:
+            return data.get("last_time")
+    return None
