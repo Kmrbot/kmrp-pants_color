@@ -7,9 +7,9 @@ import datetime
 import git
 from PIL import Image, ImageDraw, ImageFont
 
-from kmrbot.painter.pic_painter.color import Color
-from kmrbot.painter.pic_painter.pic_generator import PicGenerator
-from kmrbot.painter.pic_painter.utils import PainterUtils
+from utils.pic_painter.color import Color
+from utils.pic_painter.pic_generator import PicGenerator
+from utils.pic_painter.utils import PainterUtils
 from kmrbot.core.bot_base_info import KmrBotBaseInfo
 from nonebot.log import logger
 from .pants_record_border import PantsColorBorder
