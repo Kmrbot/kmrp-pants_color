@@ -25,7 +25,7 @@ class PantsColorRecordType(enum.Enum):
 
 class PantsRecordFont:
     __text_font = ImageFont.truetype(
-        f"{PainterUtils.get_painter_resource_path()}/normal.ttf", 30)
+        f"{PainterUtils.get_painter_resource_path()}/ttf/normal.ttf", 30)
     
     @classmethod
     def text_font(cls):
