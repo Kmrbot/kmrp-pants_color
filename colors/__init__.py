@@ -1,6 +1,11 @@
 import enum
 import json
-import os.path
+from pathlib import Path
+
+from utils.config import ensure_plugin_config_from_template
+
+__NAME_TEMPLATE_PATH = Path(__file__).with_name("name_template.json")
+__PANTS_COLOR_TEMPLATE_PATH = Path(__file__).with_name("pants_color_template.json")
 
 
 # pants_color.json -> type
@@ -13,12 +18,22 @@ class PantsColorType(enum.Enum):
 
 
 def load_name_data():
-    with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "name.json"), encoding="utf-8") as f:
+    path = ensure_plugin_config_from_template(
+        "kmrp-pants_color",
+        "name.json",
+        __NAME_TEMPLATE_PATH,
+    )
+    with open(path, encoding="utf-8") as f:
         return json.load(f)
 
 
 def load_pants_color_data():
-    with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "pants_color.json"), encoding="utf-8") as f:
+    path = ensure_plugin_config_from_template(
+        "kmrp-pants_color",
+        "pants_color.json",
+        __PANTS_COLOR_TEMPLATE_PATH,
+    )
+    with open(path, encoding="utf-8") as f:
         return json.load(f)
 
 
